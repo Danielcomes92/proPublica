@@ -1,0 +1,146 @@
+:root {
+    --darkBlue: #083C6F;
+    --blue: #0053A2;
+    --darkGray: #393B3E;
+    --maxDarkBlue: #0D1925;
+    --gray: #F1F2F2;
+    --white: #FFFFFF;
+    --yellow: #d8d513;
+}
+
+/* color palette */
+.bgDarkBlue {
+    background-color: var(--darkBlue);
+}
+
+.bgBlue {
+    background-color: var(--blue);
+}
+
+.bgMaxDarkGray {
+    background-color: var(--darkGray);
+}
+
+.bgMaxDarkBlue {
+    background-color: var(--maxDarkBlue);
+}
+
+.bgGray {
+    background-color: var(--gray);
+}
+
+.bgWhite {
+    background-color: var(--white);
+}
+/* utilities */
+
+/* principal */
+
+html {
+    min-height: 100%;
+}
+
+body {
+    background-color: var(--gray) !important;
+    font-family: "Source Sans Pro", Calibri, sans-serif !important;
+    flex: 1;
+}
+
+h1, h2, h3 {
+    font-family: Merriweather, Cambria, serif;
+}
+
+/* body */
+
+/* header */
+.logo h1 {
+    color: var(--white);
+    font-family: Merriweather,Cambria,serif;
+    margin-left: 10px;
+}
+
+.logoContainer span a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.1rem;
+    margin-left: 6px;
+}
+
+/* header */
+
+/* congress main */
+
+.congressmanBgImg, .senateBgImg {
+    background-image: 
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.50))
+    , url('../assets/img/congressmentImg.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.senateBgImg {
+    background-image: 
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.50))
+    , url('../assets/img/senateImg.jpg');
+}
+
+.color-white h2, .color-white p {
+    color: var(--white);
+}
+
+/* congress main */
+
+/* section */
+
+main {
+    background-color: var(--white);
+}
+
+.accordion-button {
+    color: var(--blue) !important;
+}
+
+.mainHomePage {
+    min-height: 68vh;
+}
+
+main h2 p {
+    color: white;
+}
+
+.btn-primary {
+    background-color: var(--yellow) !important;
+    border: none !important;
+    color: black !important;
+    font-family: Merriweather, Cambria, serif !important;
+}
+
+.btn-primary:hover {
+    background-color: rgb(185, 185, 0) !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: white !important;
+}
+
+.navbar-light .navbar-brand {
+    color: white !important;
+}
+
+/* section */
+
+/* footer */
+
+footer {
+    background-color: var(--maxDarkBlue);
+    color: white;
+    height: 10vh;
+    position: relative;
+    bottom: 0;
+}
+
+footer p {
+    margin-bottom: 0;
+}
+
+/* footer */
