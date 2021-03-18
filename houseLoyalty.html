@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGIF Statistics - House Loyalty</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+<body class="container">
+  <header>
+      <div class="logoContainer d-flex justify-content-between align-items-center bgDarkBlue p-4">
+          <div class="logo d-flex justify-content-around align-items-center">
+              <a href="index.html"><img src="./assets/img/houseOfRepresentatives.png" width="125px" alt="page logo"></a>
+              <h1>U.S. Statistics Government Institute</h1>
+          </div>
+  
+          <span class="d-flex justify-content-between align-items-center d-none d-lg-block">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="32" height="32" viewbox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <polyline points="3 7 12 13 21 7" />
+                </svg>
+              <a href="#">info@tgif.net</a>
+          </span>
+      </div>
+      
+       
+    <nav class="navbar navbar-expand-lg navbar-light bgBlue">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="index.html">TGIF</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link active d-lg-none" aria-current="page" href="mailto:info@tgif.net">Contact</a>
+              </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Congress 113
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="housePage.html">House</a></li>
+                <li><a class="dropdown-item" href="senatePage.html">Senate</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Attendance
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="houseAttendance.html">House</a></li>
+                <li><a class="dropdown-item" href="senateAttendance.html">Senate</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Party Loyalty
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="houseLoyalty.html">House</a></li>
+                <li><a class="dropdown-item" href="senateLoyalty.html">Senate</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+</header>
+
+<main class="p-5">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Party Loyalty</h2>
+      <p>
+        &nbsp; Those who consider themselves to be strong partisans, strong Democrats and strong Republicans respectively, tend to be the most faithful in voting for their party's nominee for office and legislation that backs their party's agenda.
+      </p>
+    </div>
+
+    <div class="col-md-6">
+      <h2>House at a glance</h2>
+      <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>Party</th>
+                <th>No. of Reps</th>
+                <th>% Votes w/ Party</th>
+            </tr>
+        </thead>
+        <tbody id="topTable">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<hr>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Least Loyal (Bottom 10% of Party)</h2>
+      <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>No. Party Votes</th>
+                <th>% Party Votes</th>
+            </tr>
+        </thead>
+        <tbody id="leastLoyal">
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-6">
+      <h2>Most Loyal (Top 10% of Party)</h2>
+      <table class="table table-striped text-center">
+        <thead>
+            <tr>
+              <th>Name</th>
+              <th>No. Party Votes</th>
+              <th>% Party Votes</th>
+            </tr>
+        </thead>
+        <tbody id="mostLoyal">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+
+
+<footer class="d-flex justify-content-center align-items-center">
+    <p>&copy; 2021 | All Rights Reserved - Developed by Daniel Comes</p> 
+</footer>
+
+
+<script src="./js/pro-congress-117-house.js"></script>
+<script src="./js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</body>
+</html>

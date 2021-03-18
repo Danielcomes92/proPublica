@@ -16,49 +16,40 @@ const loyaltyPage = document.title.includes('Loyalty');
 const generalPage = document.title.includes('General');
 
 const statistics = {
+    democrats: {
+        name: 'Democrats',
+        members: 0,
+        avgVotes: 0
+    },
+    republicans: {
+        name: 'Republicans',
+        members: 0,
+        avgVotes: 0
+    },
+    independants: {
+        name: 'Independant',
+        members: 0,
+        avgVotes: 0
+    },
     totals: {
         leastLoyals: [],
         mostLoyals: [],
         mostEngaged: [],
-        leastEngaged: [],
-    },
-    "parties": [
-        {
-            "name": 'Democrats',
-            "members": 0,
-            "avgVotes": 0
-        },
-        {
-            "name": 'Republicans',
-            "members": 0,
-            "avgVotes": 0
-        },
-        {
-            "name": 'Independant',
-            "members": 0,
-            "avgVotes": 0
-        },
-        {
-            "name": 'Total',
-            "members": countMembers('d') + countMembers('r') + countMembers('id'),
-            "avgVotes": ''
-        }
-    ]
-};
-
-const partiesArray = statistics.parties;
+        leastEngaged: []
+    }
+}
 
 /* STATISTICS CALCULATIONS */
-statistics.parties[0].members = countMembers('d');
-statistics.parties[0].avgVotes = getAvgVotesWithParty('d') / countMembers('d');
+statistics.democrats.members = countMembers('d');
+statistics.democrats.avgVotes = getAvgVotesWithParty('d') / countMembers('d');
 
-statistics.parties[1].members = countMembers('r');
-statistics.parties[1].avgVotes = getAvgVotesWithParty('r') / countMembers('r');
+statistics.republicans.members = countMembers('r');
+statistics.republicans.avgVotes = getAvgVotesWithParty('r') / countMembers('r');
 
-statistics.parties[2].members = countMembers('id');
-statistics.parties[2].avgVotes = countMembers('id') > 0 ? getAvgVotesWithParty('id') / countMembers('id') : 0;
+statistics.independants.members = countMembers('id');
+statistics.independants.avgVotes = countMembers('id') > 0 ? getAvgVotesWithParty('id') / countMembers('id') : 0;
 
-statistics.totals.totalMembers = countMembers('d') + countMembers('r') + countMembers('id');
+statistics.totals.members = countMembers('d') + countMembers('r') + countMembers('id');
 statistics.totals.leastLoyals = getLeastLoyals();
 statistics.totals.mostLoyals = getMostLoyals();
 statistics.totals.mostEngaged = getMostEngaged();
@@ -163,10 +154,10 @@ function insertGeneralTable() {
             let tdVotesWithParty = document.createElement('td');
             
             tdFullName.innerHTML = `<a href="${member.url}" target="_blank"> ${member.first_name} ${member.last_name} </a>`;
-            tdParty.textContent = member.party;
-            tdState.textContent = member.state;
-            tdSeniority.textContent = member.seniority;
-            tdVotesWithParty.textContent = member.votes_with_party_pct || 0;
+            tdParty.textContent = `${member.party}`;
+            tdState.textContent = `${member.state}`;
+            tdSeniority.textContent = `${member.seniority}`;
+            tdVotesWithParty.textContent = `${member.votes_with_party_pct || 0}`;
             
             tr.appendChild(tdFullName)
             tr.appendChild(tdParty)
@@ -206,27 +197,39 @@ if(attendancePage) {
 }
 
 if(attendancePage || loyaltyPage) {
-    insertTopTable(partiesArray)
+    insertTopTable()
 }
 
-function insertTopTable(array) {
-    array.forEach(party => {
-        const tr = document.createElement('tr');
-    
-        let tdParty = document.createElement('td');
-        let tdNoReps = document.createElement('td');
-        let tdPctVotesWParty = document.createElement('td');
-    
-        tdParty.textContent = party.name;
-        tdNoReps.textContent = party.members;
-        tdPctVotesWParty.textContent = party.avgVotes > 0 ? (party.avgVotes).toFixed(2) : '';
+function insertTopTable() {
+    let partyNameA = document.querySelector('#partyNameA');
+    let noRepsA = document.querySelector('#noRepsA');
+    let pctVotedA = document.querySelector('#pctVotedA');
 
-        tr.appendChild(tdParty);
-        tr.appendChild(tdNoReps);
-        tr.appendChild(tdPctVotesWParty);
-        
-        tbodyTopTable.appendChild(tr);
-    });
+    let partyNameB = document.querySelector('#partyNameB');
+    let noRepsB = document.querySelector('#noRepsB');
+    let pctVotedB = document.querySelector('#pctVotedB');
+
+    let partyNameC = document.querySelector('#partyNameC');
+    let noRepsC = document.querySelector('#noRepsC');
+    let pctVotedC = document.querySelector('#pctVotedC');
+
+    let noRepsTotal = document.querySelector('#noRepsTotal');
+    let pctVotedTotal = document.querySelector('#pctVotedTotal');
+
+    partyNameA.innerHTML = statistics.democrats.name;
+    noRepsA.innerHTML = statistics.democrats.members;
+    pctVotedA.innerHTML = (statistics.democrats.avgVotes).toFixed(2);
+
+    partyNameB.innerHTML = statistics.republicans.name;
+    noRepsB.innerHTML = statistics.republicans.members;
+    pctVotedB.innerHTML = (statistics.republicans.avgVotes).toFixed(2);
+
+    partyNameC.innerHTML = statistics.independants.name;
+    noRepsC.innerHTML = statistics.independants.members;
+    pctVotedC.innerHTML = statistics.independants.avgVotes == 0 ? '' : (statistics.independants.avgVotes).toFixed(2);
+
+    noRepsTotal.innerHTML = statistics.democrats.members + statistics.republicans.members + statistics.independants.members;
+    pctVotedTotal.innerHTML = ''
 }
 
 function insertEngagedmentLoyaltyTable(array, table) {
@@ -241,8 +244,8 @@ function insertEngagedmentLoyaltyTable(array, table) {
             let tdPctMissedVotes = document.createElement('td');
     
             tdFullName.innerHTML = `<a href="${member.url}" target="_blank"> ${member.first_name} ${member.last_name} </a>`;
-            tdNoMissedVotes.textContent = member.missed_votes;
-            tdPctMissedVotes.textContent = member.missed_votes_pct;
+            tdNoMissedVotes.textContent = `${member.missed_votes}`;
+            tdPctMissedVotes.textContent = `${member.missed_votes_pct}`;
     
             tr.appendChild(tdFullName);
             tr.appendChild(tdNoMissedVotes);
@@ -255,8 +258,8 @@ function insertEngagedmentLoyaltyTable(array, table) {
             let tdPctPartyVotes = document.createElement('td');
 
             tdFullName.innerHTML = `<a href="${member.url}" target="_blank"> ${member.first_name} ${member.last_name} </a>`;
-            tdNoPartyVotes.textContent = member.total_votes;
-            tdPctPartyVotes.textContent = member.votes_with_party_pct;
+            tdNoPartyVotes.textContent = `${member.total_votes}`;
+            tdPctPartyVotes.textContent = `${member.votes_with_party_pct}`;
 
             tr.appendChild(tdFullName);
             tr.appendChild(tdNoPartyVotes);
