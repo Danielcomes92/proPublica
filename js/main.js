@@ -22,26 +22,26 @@ const statistics = {
         mostEngaged: [],
         leastEngaged: [],
     },
-    "parties": [
+    parties: [
         {
-            "name": 'Democrats',
-            "members": 0,
-            "avgVotes": 0
+            name: 'Democrats',
+            members: 0,
+            avgVotes: 0
         },
         {
-            "name": 'Republicans',
-            "members": 0,
-            "avgVotes": 0
+            name: 'Republicans',
+            members: 0,
+            avgVotes: 0
         },
         {
-            "name": 'Independant',
-            "members": 0,
-            "avgVotes": 0
+            name: 'Independant',
+            members: 0,
+            avgVotes: 0
         },
         {
-            "name": 'Total',
-            "members": countMembers('d') + countMembers('r') + countMembers('id'),
-            "avgVotes": ''
+            name: 'Total',
+            members: countMembers('d') + countMembers('r') + countMembers('id'),
+            avgVotes: ''
         }
     ]
 };
@@ -49,20 +49,19 @@ const statistics = {
 const partiesArray = statistics.parties;
 
 /* STATISTICS CALCULATIONS */
-statistics.parties[0].members = countMembers('d');
-statistics.parties[0].avgVotes = getAvgVotesWithParty('d') / countMembers('d');
-
-statistics.parties[1].members = countMembers('r');
-statistics.parties[1].avgVotes = getAvgVotesWithParty('r') / countMembers('r');
-
-statistics.parties[2].members = countMembers('id');
-statistics.parties[2].avgVotes = countMembers('id') > 0 ? getAvgVotesWithParty('id') / countMembers('id') : 0;
-
-statistics.totals.totalMembers = countMembers('d') + countMembers('r') + countMembers('id');
 statistics.totals.leastLoyals = getLeastLoyals();
 statistics.totals.mostLoyals = getMostLoyals();
 statistics.totals.mostEngaged = getMostEngaged();
 statistics.totals.leastEngaged = getLeastEngaged();
+
+statistics.parties[0].members = countMembers('d');
+statistics.parties[0].avgVotes = getAvgVotesWithParty('d');
+
+statistics.parties[1].members = countMembers('r');
+statistics.parties[1].avgVotes = getAvgVotesWithParty('r');
+
+statistics.parties[2].members = countMembers('id');
+statistics.parties[2].avgVotes = countMembers('id') > 0 ? getAvgVotesWithParty('id') : 0;
 /* STATISTICS CALCULATION */
 
 /* STATISTICS FUNCTIONS */
@@ -77,17 +76,13 @@ function countMembers(partyAbreviattion) {
 }
 
 function getAvgVotesWithParty(partyAbreviattion) {
-    let aux = [];
     let avgTotal = 0;
     data.forEach(member => {
         if((partyAbreviattion).toUpperCase() == member.party) {
-            aux.push(member.votes_with_party_pct);
+            avgTotal += member.votes_with_party_pct;
         }
     })
-    aux.forEach(totalPctVotes => {
-        avgTotal += totalPctVotes
-    })
-    return avgTotal;
+    return avgTotal / countMembers(partyAbreviattion);
 }
 
 function getLeastLoyals() {
@@ -99,15 +94,15 @@ function getLeastLoyals() {
         }
     })
     aux.sort((a,b) => a.votes_with_party_pct - b.votes_with_party_pct)
-    auxComp = Math.ceil((aux.length * 100) / 1000)
+    auxComp = Math.ceil(aux.length * 0.10)
     return aux.slice(0, auxComp);
 }
 
-function getMostLoyals() {
+function getMostLoyals() {  
     let auxComp;
     let aux = returnMembers(data);
     aux.sort((a,b) => b.votes_with_party_pct - a.votes_with_party_pct)
-    auxComp = Math.ceil((aux.length * 100) / 1000)
+    auxComp = Math.ceil(aux.length * 0.10)
     return aux.slice(0, auxComp);
 }
 
@@ -115,7 +110,7 @@ function getLeastEngaged() {
     let auxComp;
     let aux = returnMembers(data);
     aux.sort((a,b) => b.missed_votes_pct - a.missed_votes_pct)
-    auxComp = Math.ceil((aux.length * 100) / 1000)
+    auxComp = Math.ceil(aux.length * 0.10)
     return aux.slice(0, auxComp);
 }
 
@@ -123,13 +118,12 @@ function getMostEngaged() {
     let aux = [];
     let auxComp;
     data.forEach(member => {
-        if(member.missed_votes > 0) {
             aux.push(member);
-        }
     })
     aux.sort((a,b) => a.missed_votes_pct - b.missed_votes_pct)
-    auxComp = Math.ceil((aux.length * 100) / 1000)
-    return aux.slice(0, auxComp);
+    auxComp = Math.ceil(aux.length * 0.10)
+    let auxFiltered = aux.filter(member => member.total_votes > 0); 
+    return auxFiltered.slice(0, auxComp);   
 }
 
 function returnMembers(array) {
@@ -144,14 +138,9 @@ function returnMembers(array) {
 /* RENDER TABLES */
 function insertGeneralTable() {
     tbodyGeneral.innerHTML = '';
-    //convierte en array todos los check que estan activos y luego recorro el mismo con un map para extraer cada value
     let checkboxGroup = Array.from(document.querySelectorAll('input[name=filterCheck]:checked')).map(el => el.value);
     let stateValue = select.value;
     data.forEach(member => {
-        //primer parte de la condicion evalua si el miembro que esta recorriendo cumple con la condicion de alguno de los checkbox activos
-        //Ej.: Jerry Milner - Party: ID, si esta checkeado ID lo va a mostrar, si no no
-
-        //segunda parte de la condicion solo deja pasar a los que tengan el member.state selected en el html, o en su defecto a todos cuando stateValue sea State
         if (checkboxGroup.includes(member.party) && ((stateValue == member.state) || (stateValue == "All States"))) {
 
             const tr = document.createElement('tr');
@@ -162,7 +151,9 @@ function insertGeneralTable() {
             let tdSeniority = document.createElement('td');
             let tdVotesWithParty = document.createElement('td');
             
-            tdFullName.innerHTML = `<a href="${member.url}" target="_blank"> ${member.first_name} ${member.last_name} </a>`;
+            let middleName = member.middle_name || '';
+
+            tdFullName.innerHTML = `<a href="${member.url}" target="_blank"> ${member.last_name}, ${member.first_name} ${middleName} </a>`;
             tdParty.textContent = member.party;
             tdState.textContent = member.state;
             tdSeniority.textContent = member.seniority;
@@ -239,10 +230,12 @@ function insertEngagedmentLoyaltyTable(array, table) {
             let tdFullName = document.createElement('td');
             let tdNoMissedVotes = document.createElement('td');
             let tdPctMissedVotes = document.createElement('td');
+            
+            let middleName = member.middle_name || '';
     
-            tdFullName.innerHTML = `<a href="${member.url}" target="_blank"> ${member.first_name} ${member.last_name} </a>`;
+            tdFullName.innerHTML = `<a href="${member.url}" target="_blank"> ${member.last_name}, ${member.first_name} ${middleName} </a>`;
             tdNoMissedVotes.textContent = member.missed_votes;
-            tdPctMissedVotes.textContent = member.missed_votes_pct;
+            tdPctMissedVotes.textContent = (member.missed_votes_pct).toFixed(2);
     
             tr.appendChild(tdFullName);
             tr.appendChild(tdNoMissedVotes);
@@ -254,9 +247,11 @@ function insertEngagedmentLoyaltyTable(array, table) {
             let tdNoPartyVotes = document.createElement('td');
             let tdPctPartyVotes = document.createElement('td');
 
-            tdFullName.innerHTML = `<a href="${member.url}" target="_blank"> ${member.first_name} ${member.last_name} </a>`;
-            tdNoPartyVotes.textContent = member.total_votes;
-            tdPctPartyVotes.textContent = member.votes_with_party_pct;
+            let middleName = member.middle_name || '';
+
+            tdFullName.innerHTML = `<a href="${member.url}" target="_blank"> ${member.last_name}, ${member.first_name} ${middleName} </a>`;
+            tdNoPartyVotes.textContent = Math.round((member.total_votes * member.votes_with_party_pct) / 100);
+            tdPctPartyVotes.textContent = (member.votes_with_party_pct).toFixed(2);
 
             tr.appendChild(tdFullName);
             tr.appendChild(tdNoPartyVotes);
