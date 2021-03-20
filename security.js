@@ -3,7 +3,7 @@ data = data.results[0].members;
 const select = document.querySelector('#selectStates');
 
 //TABLES
-const tbodyGeneral = document.querySelector('#congress-data');
+const tbodyGeneral = document.querySelector('#senate-data');
 const tbodyTopTable = document.querySelector('#topTable');
 const tbodyLeastEngaged = document.querySelector('#leastEngaged');
 const tbodyMostEngaged = document.querySelector('#mostEngaged');
@@ -16,7 +16,7 @@ const loyaltyPage = document.title.includes('Loyalty');
 const generalPage = document.title.includes('General');
 
 const statistics = {
-    ranking: {
+    totals: {
         leastLoyals: [],
         mostLoyals: [],
         mostEngaged: [],
@@ -49,10 +49,10 @@ const statistics = {
 const partiesArray = statistics.parties;
 
 /* STATISTICS CALCULATIONS */
-statistics.ranking.leastLoyals = getLeastLoyals();
-statistics.ranking.mostLoyals = getMostLoyals();
-statistics.ranking.mostEngaged = getMostEngaged();
-statistics.ranking.leastEngaged = getLeastEngaged();
+statistics.totals.leastLoyals = getLeastLoyals();
+statistics.totals.mostLoyals = getMostLoyals();
+statistics.totals.mostEngaged = getMostEngaged();
+statistics.totals.leastEngaged = getLeastEngaged();
 
 statistics.parties[0].members = countMembers('d');
 statistics.parties[0].avgVotes = getAvgVotesWithParty('d');
@@ -135,46 +135,10 @@ function returnMembers(array) {
 }
 /* STATISTICS FUNCTIONS */
 
-
-if(generalPage) {
-    insertGeneralTable();
-    getOptions(data);
-}
-
-if(attendancePage) {
-    insertEngagedmentLoyaltyTable(statistics.ranking.leastEngaged, tbodyLeastEngaged);
-    insertEngagedmentLoyaltyTable(statistics.ranking.mostEngaged, tbodyMostEngaged);
-} else if(loyaltyPage) {
-    insertEngagedmentLoyaltyTable(statistics.ranking.mostLoyals, tbodyMostLoyal);
-    insertEngagedmentLoyaltyTable(statistics.ranking.leastLoyals, tbodyLeastLoyal);
-}
-
-if(attendancePage || loyaltyPage) {
-    insertTopTable(partiesArray)
-}
-
-
-function getOptions(array) {
-    let statesAux = [];
-    array.forEach(stateMember => {
-        if(statesAux.indexOf(stateMember.state) == -1) {
-            statesAux.push(stateMember.state)
-        }
-    });
-    
-    statesAux.sort();
-    statesAux.forEach(state => {
-        option = document.createElement('option');
-        option.value = state;
-        option.text = state;
-        select.appendChild(option)
-    });
-}
-
 /* RENDER TABLES */
 function insertGeneralTable() {
     tbodyGeneral.innerHTML = '';
-    let checkboxGroup = Array.from(document.querySelectorAll('input[name=filterCheck]:checked')).map(element => element.value);
+    let checkboxGroup = Array.from(document.querySelectorAll('input[name=filterCheck]:checked')).map(el => el.value);
     let stateValue = select.value;
     data.forEach(member => {
         if (checkboxGroup.includes(member.party) && ((stateValue == member.state) || (stateValue == "All States"))) {
@@ -193,7 +157,7 @@ function insertGeneralTable() {
             tdParty.textContent = member.party;
             tdState.textContent = member.state;
             tdSeniority.textContent = member.seniority;
-            tdVotesWithParty.textContent = (member.votes_with_party_pct).toFixed(2) || 0;
+            tdVotesWithParty.textContent = member.votes_with_party_pct || 0;
             
             tr.appendChild(tdFullName)
             tr.appendChild(tdParty)
@@ -204,6 +168,36 @@ function insertGeneralTable() {
             tbodyGeneral.appendChild(tr);
         }
     });
+}
+if(generalPage) {
+    insertGeneralTable();
+    
+    let statesAux = [];
+    data.forEach(stateMember => {
+        if(statesAux.indexOf(stateMember.state) == -1) {
+            statesAux.push(stateMember.state)
+        }
+    });
+    
+    statesAux.sort();
+    statesAux.forEach(state => {
+        option = document.createElement('option');
+        option.value = state;
+        option.text = state;
+        select.appendChild(option)
+    });
+}
+
+if(attendancePage) {
+    insertEngagedmentLoyaltyTable(statistics.totals.leastEngaged, tbodyLeastEngaged);
+    insertEngagedmentLoyaltyTable(statistics.totals.mostEngaged, tbodyMostEngaged);
+} else if(loyaltyPage) {
+    insertEngagedmentLoyaltyTable(statistics.totals.mostLoyals, tbodyMostLoyal);
+    insertEngagedmentLoyaltyTable(statistics.totals.leastLoyals, tbodyLeastLoyal);
+}
+
+if(attendancePage || loyaltyPage) {
+    insertTopTable(partiesArray)
 }
 
 function insertTopTable(array) {
@@ -227,7 +221,9 @@ function insertTopTable(array) {
 }
 
 function insertEngagedmentLoyaltyTable(array, table) {
+
     array.forEach(member => {
+
         const tr = document.createElement('tr');
         
         if(attendancePage) {
